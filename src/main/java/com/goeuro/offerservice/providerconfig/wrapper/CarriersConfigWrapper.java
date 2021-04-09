@@ -1,44 +1,16 @@
 package com.goeuro.offerservice.providerconfig.wrapper;
 
 import com.goeuro.offerservice.providerconfig.model.CarrierConfig;
-import com.goeuro.offerservice.providerconfig.model.CustomAdditionalServiceConfiguration;
-import com.goeuro.offerservice.providerconfig.model.CustomAdditionalServiceConfiguration.CustomAdditionalServiceConfigurationType;
 import com.goeuro.offerservice.providerconfig.model.ProviderConfig;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.util.Objects.nonNull;
-import static java.util.stream.Collectors.toMap;
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class CarriersConfigWrapper {
-
-  private final ProviderConfig providerConfig;
-
-  @VisibleForTesting
-  public boolean isDisabled(String carrierCode) {
-    return getCarrierConfig(providerConfig, carrierCode)
-        .map(CarrierConfig::getDisabled)
-        .orElse(false);
-  }
-
-  public List<String> getAllWithCustomFare() {
-    return getNotEmptyCarrierConfigs(providerConfig)
-        .filter(carriers -> carriers.stream().anyMatch(c -> nonNull(c.getCustomFare())))
-        .map(
-            carriers ->
-                carriers.stream()
-                    .filter(carrier -> nonNull(carrier.getCustomFare()))
-                    .filter(CarrierConfig::getCustomFare)
-                    .map(CarrierConfig::getName)
-                    .collect(Collectors.toList()))
-        .orElse(Collections.emptyList());
-  }
 
   private static Optional<List<CarrierConfig>> getNotEmptyCarrierConfigs(
       ProviderConfig providerConfig) {
@@ -59,31 +31,6 @@ public class CarriersConfigWrapper {
 
   static List<CarrierConfig> getCarrierConfigs(ProviderConfig providerConfig) {
     return getNotEmptyCarrierConfigs(providerConfig).orElse(Lists.newArrayList());
-  }
-
-  public Map<String, Map<CustomAdditionalServiceConfigurationType, Boolean>>
-      getAllWithCustomAdditionalServicesLabel() {
-    return Optional.ofNullable(providerConfig.getCarriers()).stream()
-        .flatMap(Collection::stream)
-        .filter(CarriersConfigWrapper::hasCustomAdditionalServices)
-        .collect(
-            toMap(
-                CarrierConfig::getName,
-                data ->
-                    data.getCustomAdditionalServices().stream()
-                        .collect(
-                            toMap(
-                                CustomAdditionalServiceConfiguration::getType,
-                                CustomAdditionalServiceConfiguration::getCustomLabel))));
-  }
-
-  private static boolean hasCustomAdditionalServices(CarrierConfig carrierConfig) {
-    return Optional.ofNullable(carrierConfig.getCustomAdditionalServices()).stream()
-        .flatMap(Collection::stream)
-        .filter(
-            customAdditionalServiceConfiguration ->
-                nonNull(customAdditionalServiceConfiguration.getCustomLabel()))
-        .anyMatch(CustomAdditionalServiceConfiguration::getCustomLabel);
   }
 
   // TODO

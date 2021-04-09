@@ -16,31 +16,4 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 public class CountriesWhitelistConfigWrapper {
 
   private final ProviderConfig providerConfig;
-
-  public boolean exists() {
-    return getCountriesWhitelistConfig().isPresent();
-  }
-
-  public List<String> getArrivalCountryCodes(String departureCountryCode) {
-    return getCountriesWhitelistConfig()
-        .map(SearchConfig::getCountriesWhitelist)
-        .flatMap(
-            countryWhitelistConfigs ->
-                countryWhitelistConfigs.stream()
-                    .filter(cc -> cc.getDeparture().equals(departureCountryCode))
-                    .findFirst())
-        .map(CountryWhitelistConfig::getArrivals)
-        .orElse(Collections.emptyList());
-  }
-
-  private Optional<SearchConfig> getCountriesWhitelistConfig() {
-    return Optional.ofNullable(providerConfig)
-        .map(ProviderConfig::getSearch)
-        .filter(searchConfig -> isNotEmpty(searchConfig.getCountriesWhitelist()));
-  }
-
-  @VisibleForTesting
-  public ProviderConfig getProviderConfig() {
-    return providerConfig;
-  }
 }

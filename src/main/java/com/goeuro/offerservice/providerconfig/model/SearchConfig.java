@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Duration;
 import java.util.List;
 
 @Data
@@ -30,23 +29,7 @@ public class SearchConfig {
    */
   private boolean passengerData;
 
-  private Boolean multiplePassengers;
-
-  private Boolean roundTrip;
-
-  private Boolean shareUserDomain;
-
-  private Duration minimumInAdvance;
-
-  private Duration maximumInAdvance;
-
   private AuthConfig auth;
-
-  private OfferUpsellConfig offerUpsell;
-
-  private RateLimiterConfig rateLimiter;
-
-  private CacheConfig cache;
 
   private List<CountryWhitelistConfig> countriesWhitelist;
 }

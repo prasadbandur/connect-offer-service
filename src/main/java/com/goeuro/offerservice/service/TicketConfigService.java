@@ -26,7 +26,6 @@ public class TicketConfigService {
   private final OfferStore offerStore;
   private final AdapterClient adapterClient;
   private final PassengerDataMapper passengerDataMapper;
-  private final TicketConfigurationMapper ticketConfigurationMapper;
   private final ConnectSolutionMapper solutionMapper;
   private final ConnectOfferMapper offerMapper;
   private final ProtobufOfferMapper protobufOfferMapper;
